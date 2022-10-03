@@ -1,10 +1,12 @@
 {% extends 'main.html' %}
 {% block comment %}
-    <form action="/posts/{{ post.id }}/" method="post">
-        {% csrf_token %}
-        {{ comment_form.as_p}}
-        <input type="submit" value="Создать коммент">
-    </form>
+    {% if user %}
+        <form action="/posts/{{ post.id }}/" method="post">
+            {% csrf_token %}
+            {{ comment_form.as_p}}
+            <input type="submit" value="Создать коммент">
+        </form>
+    {% endif %}
 {% endblock %}
 {% block post %}
     <style type="text/css">

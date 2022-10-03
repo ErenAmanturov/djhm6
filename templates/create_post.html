@@ -5,10 +5,19 @@
     <title>Create Post</title>
 </head>
 <body style="background-color: grey">
-    <form action="/posts/create/" method="post">
-        {% csrf_token %}
-        {{ post_form.as_p}}
-        <input type="submit" value="Создать пост">
-    </form>
+    {% if user %}
+        <form action="/posts/create/" method="post">
+            {% csrf_token %}
+            {{ post_form.as_p}}
+            <input type="submit" value="Создать пост">
+        </form>
+    {% else %}
+        <form action="/" method="get">
+            {% csrf_token %}
+            <h1 style="size:100px"> You are not user. Register or Login into site to create posts</h1>
+            <h2 style="size:100px">Register or Login into site to create posts</h2>
+            <input type="submit" value="Redirect to Main Page">
+        </form>
+    {% endif %}
 </body>
 </html>
