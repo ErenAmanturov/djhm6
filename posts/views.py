@@ -53,9 +53,12 @@ def post_detail(request, id):
 def create_post(request):
 
     if request.method == 'GET':
-        return render(request, 'create_post.html', context={
-            'post_form': PostForms,
-            'user': get_user_from_request(request)})
+        if get_user_from_request(request):
+            return render(request, 'create_post.html', context={
+                'post_form': PostForms,
+                'user': get_user_from_request(request)})
+        else:
+            return redirect('/')
 
     if request.method == 'POST':
         form = PostForms(request.POST)
@@ -74,27 +77,27 @@ def create_post(request):
             })
 
 
-# def edit_post(request, posts_id):
-#     if request.method == 'GET':
-#         return render(request, 'edit_post.html', context={
-#             'edited_post_form': PostForms,
-#             'post': posts_id
-#         })
-#     if request.method == 'POST':
-#         form = PostForms(request.POST)
-#         if form.is_valid():
-#             Post.title = request.data.get('title')
-#             Post.description = request.data.get('description')
-#             Post.type = request.data.get('type')
-#             Post.date = request.data.get('date')
-#             Post.stars = request.data.get('stars')
-#
-#             Post.save()
-#
-#             return Response(data={"message": "Successfully updated product",
-#                                 "product":  ProductListSerializer(product).data})
-#         else:
-#             return render(request, 'edit_post.html', context={
-#                 'edited_post_form': form,
-#                 'posts': posts_id
-#             })
+def edit_post(request, id):
+    if request.method == 'GET':
+        return render(request, 'edit_post.html', context={
+            'edited_post_form': PostForms,
+            'id': id
+        })
+    if request.method == 'POST':
+        form = PostForms(request.POST)
+        if form.is_valid():
+            post = Post.objects.get(id=id)
+            post.title = form.cleaned_data.get('title')
+            post.description = form.cleaned_data.get('description')
+            post.type = form.cleaned_data.get('type')
+            post.date = form.cleaned_data.get('date')
+            post.stars = form.cleaned_data.get('stars')
+
+            post.save()
+
+            return redirect('/')
+        else:
+            return render(request, 'edit_post.html', context={
+                'edited_post_form': form,
+                'id': id
+            })
