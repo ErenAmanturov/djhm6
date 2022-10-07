@@ -18,7 +18,7 @@ from django.urls import path
 from posts.views import main, post_detail, create_post, edit_post
 from django.conf.urls.static import static
 from django.conf import settings
-from users.views import register_view, login_view, logout_view
+from users.views import register_view, login_view, logout_view, set_password, personal_info
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +28,7 @@ urlpatterns = [
     path('users/register/', register_view),
     path('users/login/', login_view),
     path('users/logout/', logout_view),
-    path('posts/<int:id>/edit/', edit_post)
+    path('posts/<int:id>/edit/', edit_post),
+    path('users/<int:id>/change_password/', set_password),
+    path('personal/', personal_info)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

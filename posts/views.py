@@ -3,6 +3,7 @@ from posts.models import Post, Comment
 from posts.forms import PostForms, CommentForms
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from posts.constants import PAGINATION_LIMIT
 
 
 def get_user_from_request(request):
@@ -11,12 +12,14 @@ def get_user_from_request(request):
 
 def main(request):
     if request.method == 'GET':
-
         posts = Post.objects.all()
-
+        page = int(request.GET.get('page', 1))
+        start_post = (len(posts) // ((len(posts) // PAGINATION_LIMIT) + 1)) * page - 1 if page > 1 else 0
+        end_posts = start_post + PAGINATION_LIMIT
         data = {
-            "posts": posts,
-            'user': get_user_from_request(request)
+            "posts": posts[start_post:end_posts],
+            'user': get_user_from_request(request),
+            'pages': range(1, (posts.__len__() // PAGINATION_LIMIT) + 1)
         }
 
         return render(request, 'posts.html', context=data)
