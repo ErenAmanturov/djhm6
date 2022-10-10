@@ -1,9 +1,9 @@
 {% extends 'main.html' %}
 {% block comment %}
     {% if user %}
-        <form action="/posts/{{ post.id }}/" method="post">
+        <form action="/posts/{{ posts.id }}/detail/" method="post">
             {% csrf_token %}
-            {{ comment_form.as_p}}
+            {{ comment_form.as_p }}
             <input type="submit" value="Создать коммент">
         </form>
     {% endif %}
